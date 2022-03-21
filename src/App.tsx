@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+// in src/App.js
+import * as React from "react";
+import { Admin, Create, Resource, SimpleForm, TextInput, ReferenceArrayInput, SelectArrayInput, ListGuesser } from 'react-admin';
+import jsonServerProvider from 'ra-data-json-server';
 
-function App() {
+const dataProvider = jsonServerProvider('https://jsonplaceholder.typicode.com');
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <Admin dataProvider={dataProvider}>
+      <Resource name="users" list={ListGuesser} create={ExampleCreate} />
+    </Admin>
+  )
+};
 
 export default App;
+
+
+const ExampleCreate = (props: any) => (
+  <Create {...props}>
+    <SimpleForm>
+      <TextInput source="name" />
+      <ReferenceArrayInput source="permission_ids" reference="todos">
+        <SelectArrayInput optionText="title" />
+      </ReferenceArrayInput>
+    </SimpleForm>
+  </Create>
+);
+  
